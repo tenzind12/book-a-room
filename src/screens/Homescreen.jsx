@@ -6,6 +6,8 @@ export default function Homescreen() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  // getting all the rooms from database
   useEffect(() => {
     try {
       setLoading(true);
@@ -29,9 +31,9 @@ export default function Homescreen() {
         ) : error ? (
           <h1>error man</h1>
         ) : (
-          rooms.map((room) => {
+          rooms.map((room, ind) => {
             return (
-              <div className="col-md-9 mt-2">
+              <div className="col-md-9 mt-2" key={ind}>
                 <Room room={room} />
               </div>
             );
