@@ -4,13 +4,13 @@ import Room from '../components/Room';
 
 export default function Homescreen() {
   const [rooms, setRooms] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
 
   // getting all the rooms from database
   useEffect(() => {
     try {
-      setLoading(true);
+      // setLoading(true);
       (async () => {
         const data = (await axios.get('/api/rooms/getallrooms')).data;
         setRooms(data.rooms);
