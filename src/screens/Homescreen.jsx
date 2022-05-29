@@ -14,7 +14,7 @@ export default function Homescreen() {
     try {
       // setLoading(true);
       (async () => {
-        const data = (await axios.get('/api/rooms/getallroom')).data;
+        const data = (await axios.get('/api/rooms/getallrooms')).data;
         setRooms(data.rooms);
         setLoading(false);
       })();
