@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Success() {
+function Success({ message }) {
   return (
     <div className="alert alert-success" role="alert">
-      success
+      {message}
     </div>
   );
 }
