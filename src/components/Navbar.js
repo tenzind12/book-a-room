@@ -38,7 +38,7 @@ function Navbar() {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <i class="fa-solid fa-user-astronaut"></i> {user.name}
+                      <i className="fa-solid fa-user-astronaut"></i> {user.name}
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                       <li>
