@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Register() {
   const [inputs, setInputs] = useState({ name: '', email: '', password: '', cpassword: '' });
 
-  const register = () => {
-    const user = inputs;
-    console.log(user);
+  const register = async () => {
+    if (inputs.password === inputs.cpassword) {
+      const user = inputs;
+
+      try {
+        const result = (await axios.post('/api/users/register', user)).data;
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-md-5">
-        <div>
-          <h1>Register</h1>
+    <div className="row justify-content-center mt-5">
+      <div className="col-lg-5">
+        <div className="shadow p-4">
+          <h2 className="fs-1 text-center p-2 fw-bold">Register</h2>
           <input
             type="text"
             placeholder="Name"
@@ -41,7 +49,7 @@ function Register() {
             value={inputs.cpassword}
             onChange={(e) => setInputs({ ...inputs, cpassword: e.target.value })}
           />
-          <button className="btn btn-sm btn-dark" onClick={register}>
+          <button className="btn btn-sm btn-dark mt-3" onClick={register}>
             Register
           </button>
         </div>
