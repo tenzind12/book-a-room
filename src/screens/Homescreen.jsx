@@ -15,8 +15,8 @@ export default function Homescreen() {
   const [error, setError] = useState();
 
   // booking room with date
-  const [fromdate, setFromdate] = useState();
-  const [todate, setTodate] = useState();
+  const [fromdate, setFromdate] = useState('');
+  const [todate, setTodate] = useState('');
 
   // getting all the rooms from database
   useEffect(() => {

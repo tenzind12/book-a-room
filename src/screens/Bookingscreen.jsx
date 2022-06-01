@@ -16,6 +16,7 @@ function Bookingscreen() {
   const todate = moment(params.todate, 'DD-MM-YYYY');
 
   const totalDays = moment.duration(todate.diff(fromdate)).asDays() + 1;
+  const [totalAmount, setTotalAmount] = useState();
 
   // get room by id
   useEffect(() => {
@@ -23,6 +24,7 @@ function Bookingscreen() {
       setLoading(true);
       (async () => {
         const data = (await axios.post('/api/rooms/getroombyid', { roomid: roomid })).data;
+        setTotalAmount(totalDays * data.rentperday);
         setRoom(data);
         setLoading(false);
       })();
@@ -30,7 +32,25 @@ function Bookingscreen() {
       setError(error);
       setLoading(false);
     }
-  }, [roomid]);
+  }, [roomid, totalDays]);
+
+  const bookRoom = async () => {
+    const bookingdetails = {
+      room,
+      userid: JSON.parse(localStorage.getItem('currentUser'))._id,
+      fromdate,
+      todate,
+      totalamount: totalAmount,
+      totaldays: totalDays,
+    };
+
+    try {
+      const result = await axios.post('/api/bookings/bookroom', bookingdetails);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="m-5">
@@ -71,12 +91,14 @@ function Bookingscreen() {
                 <b>Rent per day : </b> {room.rentperday}
               </p>
               <p>
-                <b>Total amount :</b>
+                <b>Total amount :</b> {totalAmount}
               </p>
             </div>
 
             <div className="float-end">
-              <button className="btn btn-sm btn-dark">Pay Now</button>
+              <button className="btn btn-sm btn-dark" onClick={bookRoom}>
+                Pay Now
+              </button>
             </div>
           </div>
         </div>
