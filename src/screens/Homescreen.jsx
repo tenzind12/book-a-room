@@ -17,6 +17,8 @@ export default function Homescreen() {
   // booking room with date
   const [fromdate, setFromdate] = useState('');
   const [todate, setTodate] = useState('');
+  // we use this state to filter rooms which is already booked
+  const [duplicateRooms, setDuplicateRooms] = useState([]);
 
   // getting all the rooms from database
   useEffect(() => {
@@ -24,7 +26,9 @@ export default function Homescreen() {
       // setLoading(true);
       (async () => {
         const data = (await axios.get('/api/rooms/getallrooms')).data;
+        // saving the room data in two React States
         setRooms(data.rooms);
+        setDuplicateRooms(data.rooms);
         setLoading(false);
       })();
     } catch (error) {
@@ -34,10 +38,40 @@ export default function Homescreen() {
     }
   }, []);
 
-  // date function
+  // date range function && updating room state by booking date condition
   const filterByDate = (dates) => {
     setFromdate(moment(dates[0]).format('DD-MM-YYYY'));
     setTodate(moment(dates[1]).format('DD-MM-YYYY'));
+
+    const temprooms = [];
+    let availability = false;
+
+    for (const room of duplicateRooms) {
+      //if there is booking on this room any date
+      if (room.currentbookings.length > 0) {
+        for (const booking of room.currentbookings) {
+          // prettier-ignore
+          if (!moment(moment(dates[0]).format('DD-MM-YYYY')).isBetween(booking.fromdate,booking.todate) 
+              && !moment(moment(dates[1]).format('DD-MM-YYYY')).isBetween(booking.fromdate,booking.todate)) { // if date not between certain date
+
+                // also check if the formdate and todate are not equal
+                if(moment(dates[0]).format('DD-MM-YYYY') !== booking.fromdate &&
+                moment(dates[0]).format('DD-MM-YYYY') !== booking.todate &&
+                moment(dates[1]).format('DD-MM-YYYY') !== booking.fromdate &&
+                moment(dates[1]).format('DD-MM-YYYY') !== booking.todate
+                ) {
+                  availability = true;
+                }
+          }
+        }
+      }
+
+      if (availability === true || room.currentbookings.length <= 0) {
+        temprooms.push(room);
+      }
+      // update room state with updated value, room that is not booked on the same date
+      setRooms(temprooms);
+    }
   };
 
   return (

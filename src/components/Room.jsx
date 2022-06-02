@@ -26,9 +26,11 @@ export default function Room({ room, fromdate, todate }) {
         </p>
 
         <div className="float-end">
-          <Link to={`/book/${room._id}/${fromdate}/${todate}`}>
-            <button className="btn btn-sm btn-dark me-2">Book Now</button>
-          </Link>
+          {fromdate && todate && (
+            <Link to={`/book/${room._id}/${fromdate}/${todate}`}>
+              <button className="btn btn-sm btn-dark me-2">Book Now</button>
+            </Link>
+          )}
           <Link to="#">
             <button className="btn btn-sm btn-dark" onClick={handleShow}>
               View Details
