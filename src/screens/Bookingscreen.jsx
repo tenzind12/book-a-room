@@ -4,6 +4,7 @@ import axios from 'axios';
 import Loader from '../components/Loader';
 import Error from '../components/Error';
 import moment from 'moment';
+import sweetalert from 'sweetalert2';
 // STRIPE
 import StripeCheckout from 'react-stripe-checkout';
 
@@ -50,10 +51,17 @@ function Bookingscreen() {
     };
 
     try {
+      setLoading(true);
       const result = await axios.post('/api/bookings/bookroom', bookingdetails);
-      console.log(result);
+      setLoading(false);
+      sweetalert
+        .fire('Successfull !', 'Your room has been booked', 'success')
+        .then((result) => (window.location.href = '/bookings'));
+      // console.log(result);
     } catch (error) {
+      setLoading(false);
       console.log(error);
+      sweetalert.fire('Unsuccessfull !', 'Something went wrong', 'error');
     }
   };
 
