@@ -4,6 +4,8 @@ import axios from 'axios';
 import Loader from '../components/Loader';
 import Error from '../components/Error';
 import moment from 'moment';
+// STRIPE
+import StripeCheckout from 'react-stripe-checkout';
 
 function Bookingscreen() {
   const params = useParams(); // to get id from url param
@@ -34,7 +36,9 @@ function Bookingscreen() {
     }
   }, [roomid, totalDays]);
 
-  const bookRoom = async () => {
+  // ============= STRIPE PAYMENT FUNCTION ============== //
+  const onToken = async (token) => {
+    // console.log(token);
     const bookingdetails = {
       room,
       userid: JSON.parse(localStorage.getItem('currentUser'))._id,
@@ -42,6 +46,7 @@ function Bookingscreen() {
       todate,
       totalamount: totalAmount,
       totaldays: totalDays,
+      token,
     };
 
     try {
@@ -96,9 +101,17 @@ function Bookingscreen() {
             </div>
 
             <div className="float-end">
-              <button className="btn btn-sm btn-dark" onClick={bookRoom}>
-                Pay Now
-              </button>
+              {/* stripe button */}
+              <StripeCheckout
+                name="Payment Form"
+                amount={totalAmount * 100}
+                locale="fr"
+                token={onToken}
+                currency="EUR"
+                stripeKey="pk_test_51KAuPUAKBlCe0kMM28dRBK87PLmH9wZicPdMZCAXopbyM4yRnhy4BTWOL4BdcXoCcHQGRtbc5OgYppgN5qaYo1IP00WXvCGocO"
+              >
+                <button className="btn btn-sm btn-dark">Pay Now</button>
+              </StripeCheckout>
             </div>
           </div>
         </div>

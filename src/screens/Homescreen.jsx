@@ -58,8 +58,8 @@ export default function Homescreen() {
                 if(moment(dates[0]).format('DD-MM-YYYY') !== booking.fromdate &&
                 moment(dates[0]).format('DD-MM-YYYY') !== booking.todate &&
                 moment(dates[1]).format('DD-MM-YYYY') !== booking.fromdate &&
-                moment(dates[1]).format('DD-MM-YYYY') !== booking.todate
-                ) {
+                moment(dates[1]).format('DD-MM-YYYY') !== booking.todate) 
+                {
                   availability = true;
                 }
           }
