@@ -81,6 +81,7 @@ export function MyBookings() {
     <div className="row m-0">
       <div className="col-lg-6">
         {loading && <Loader />}
+        {error && <Error />}
         {bookings &&
           bookings.map((booking) => (
             <div className="shadow-lg p-4" key={booking._id}>
