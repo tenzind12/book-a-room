@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import Error from '../components/Error';
@@ -17,7 +17,7 @@ function Register() {
 
       try {
         setLoading(true);
-        const result = (await axios.post('/api/users/register', user)).data;
+        await axios.post('/api/users/register', user).data;
         setLoading(false);
         setSuccess(true);
         setInputs({ name: '', email: '', password: '', cpassword: '' });

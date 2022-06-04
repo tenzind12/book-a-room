@@ -5,7 +5,7 @@ import Loader from '../components/Loader';
 import Error from '../components/Error';
 import moment from 'moment';
 // antd
-import { DatePicker, Space } from 'antd';
+import { DatePicker } from 'antd';
 import 'antd/dist/antd.css';
 const { RangePicker } = DatePicker;
 
@@ -17,8 +17,12 @@ export default function Homescreen() {
   // booking room with date
   const [fromdate, setFromdate] = useState('');
   const [todate, setTodate] = useState('');
-  // we use this state to filter rooms which is already booked
+  // we use this state to filter rooms which is already booked and only available rooms to setRooms again with new result
   const [duplicateRooms, setDuplicateRooms] = useState([]);
+
+  // search bar state
+  const [searchText, setSearchText] = useState('');
+  const [type, setType] = useState('all');
 
   // getting all the rooms from database
   useEffect(() => {
@@ -74,15 +78,62 @@ export default function Homescreen() {
     }
   };
 
+  // on every keyup, this function is called
+  const filterBySearch = () => {
+    const temprooms = duplicateRooms.filter((room) =>
+      room.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    setRooms(temprooms);
+  };
+
+  // dropdown select filter - delux, non-delux
+  const filterByType = (e) => {
+    if (e !== 'all') {
+      const temprooms = duplicateRooms.filter(
+        (room) => room.type.toLowerCase() === e.toLowerCase()
+      );
+      setRooms(temprooms);
+      setType(e);
+    } else {
+      setRooms(duplicateRooms);
+      setType('all');
+    }
+  };
+
   return (
     <div className="container">
-      {/* data range */}
-      <div className="row mt-5">
+      <div className="row mt-5 shadow-lg p-3">
+        {/* data range */}
         <div className="col-lg-3">
           <RangePicker format="DD-MM-YYYY" onChange={filterByDate} />
         </div>
+        {/* end date range */}
+
+        {/* search bar */}
+        <div className="col-lg-5">
+          <input
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyUp={filterBySearch}
+            type="text"
+            placeholder="Search rooms"
+            className="form-control border-0 shadow"
+          />
+        </div>
+
+        <div className="col-md-3">
+          <select
+            className="form-select"
+            value={type}
+            onChange={(e) => filterByType(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="delux">Delux</option>
+            <option value="non-delux">Non-Delux</option>
+          </select>
+        </div>
       </div>
-      {/* end date range */}
 
       <div className="row justify-content-center mt-5">
         {loading ? (

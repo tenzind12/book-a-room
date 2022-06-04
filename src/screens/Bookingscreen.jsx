@@ -52,7 +52,7 @@ function Bookingscreen() {
 
     try {
       setLoading(true);
-      const result = await axios.post('/api/bookings/bookroom', bookingdetails);
+      await axios.post('/api/bookings/bookroom', bookingdetails);
       setLoading(false);
       sweetalert
         .fire('Successfull !', 'Your room has been booked', 'success')
