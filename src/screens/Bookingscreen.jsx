@@ -56,7 +56,7 @@ function Bookingscreen() {
       setLoading(false);
       sweetalert
         .fire('Successfull !', 'Your room has been booked', 'success')
-        .then((result) => (window.location.href = '/bookings'));
+        .then((result) => (window.location.href = '/profile'));
       // console.log(result);
     } catch (error) {
       setLoading(false);

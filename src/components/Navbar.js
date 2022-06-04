@@ -42,8 +42,8 @@ function Navbar() {
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                       <li>
-                        <a className="dropdown-item" href="/bookings">
-                          Bookings
+                        <a className="dropdown-item" href="/profile">
+                          Profile
                         </a>
                       </li>
                       <li>
