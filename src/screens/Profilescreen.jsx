@@ -1,5 +1,7 @@
 import { Tabs } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Loader from '../components/Loader';
+import Error from '../components/Error';
 import axios from 'axios';
 
 const { TabPane } = Tabs;
@@ -9,10 +11,10 @@ function Profilescreen() {
 
   useEffect(() => {
     if (!user) window.location.href = '/login';
-  }, []);
+  }, [user]);
 
   return (
-    <div className="ml-3 mt-3">
+    <div className="ms-3 mt-3">
       <Tabs defaultActiveKey="1">
         <TabPane tab="Profile" key="1">
           <h1>My Profile</h1>
@@ -33,22 +35,62 @@ export default Profilescreen;
 
 export function MyBookings() {
   const user = JSON.parse(localStorage.getItem('currentUser'));
+  const [bookings, setBookings] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
 
   // getting booked room with userId useEffect
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true);
         const rooms = (await axios.post('/api/bookings/getbookingsbyuserid/', { userid: user._id }))
           .data;
-        console.log(rooms);
+        setBookings(rooms);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
+        setError(error);
         console.log(error);
       }
     })();
   }, [user._id]);
   return (
-    <div>
-      <h1>My Bookings</h1>{' '}
+    <div className="row m-0">
+      <div className="col-lg-6">
+        {loading && <Loader />}
+        {bookings &&
+          bookings.map((booking) => (
+            <div className="shadow-lg p-4">
+              <h4>{booking.room}</h4>
+              <p>
+                <b>Booking Id: </b>
+                {booking._id}
+              </p>
+              <p>
+                <b>CheckIn Date : </b>
+                {booking.fromdate}
+              </p>
+              <p>
+                <b>Checkout Date: </b>
+                {booking.todate}
+              </p>
+              <p>
+                <b>Amount: </b>
+                {booking.totalamount} €
+              </p>
+              <p>
+                <b>Status : </b>
+                {booking.status === 'booked' ? 'Confirmed' : 'Canceled'}
+              </p>
+
+              <div className="text-end">
+                <button className="btn btn-sm btn-dark">Cancel Booking</button>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
