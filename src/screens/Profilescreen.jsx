@@ -1,7 +1,8 @@
-import { Tabs } from 'antd';
+import { Tabs, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import Error from '../components/Error';
+import sweetalert from 'sweetalert2';
 import axios from 'axios';
 
 const { TabPane } = Tabs;
@@ -56,13 +57,33 @@ export function MyBookings() {
       }
     })();
   }, [user._id]);
+
+  // cancel booking function
+  const cancelBooking = async (bookingId, roomid) => {
+    try {
+      setLoading(true);
+      const result = await (
+        await axios.post('/api/bookings/cancelbooking', { bookingId, roomid })
+      ).data;
+      console.log(result);
+      setLoading(false);
+      sweetalert
+        .fire('Success', 'Booking has been cancelled !')
+        .then((result) => window.location.reload());
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      sweetalert.fire('Unsuccessful !', 'Cancellation failed ! Please try again');
+    }
+  };
+
   return (
     <div className="row m-0">
       <div className="col-lg-6">
         {loading && <Loader />}
         {bookings &&
           bookings.map((booking) => (
-            <div className="shadow-lg p-4">
+            <div className="shadow-lg p-4" key={booking._id}>
               <h4>{booking.room}</h4>
               <p>
                 <b>Booking Id: </b>
@@ -82,11 +103,21 @@ export function MyBookings() {
               </p>
               <p>
                 <b>Status : </b>
-                {booking.status === 'booked' ? 'Confirmed' : 'Canceled'}
+                {booking.status === 'booked' ? (
+                  <Tag color="#87d068">Confirmed</Tag>
+                ) : (
+                  <Tag color="#f50">Cancelled</Tag>
+                )}
               </p>
 
               <div className="text-end">
-                <button className="btn btn-sm btn-dark">Cancel Booking</button>
+                <button
+                  className="btn btn-sm btn-dark"
+                  onClick={() => cancelBooking(booking._id, booking.roomid)}
+                  disabled={booking.status === 'cancelled' ? true : false}
+                >
+                  Cancel Booking
+                </button>
               </div>
             </div>
           ))}

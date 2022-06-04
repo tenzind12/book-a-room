@@ -23,6 +23,9 @@ function Bookingscreen() {
 
   // get room by id
   useEffect(() => {
+    // if not user logged in => redirecccttttt...
+    if (!localStorage.getItem('currentUser')) window.location.href = '/login';
+
     try {
       setLoading(true);
       (async () => {
