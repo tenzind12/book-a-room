@@ -103,4 +103,14 @@ router.post('/cancelbooking', async (req, res) => {
   }
 });
 
+// ADMIN SIDE
+router.get('/getallbookings', async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    res.send(bookings);
+  } catch (error) {
+    return res.sendStatus(400).json(error);
+  }
+});
+
 module.exports = router;
