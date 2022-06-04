@@ -65,7 +65,7 @@ router.post('/bookroom', async (req, res) => {
   }
 });
 
-// get booked room by userid
+// Get booked room by userid
 router.post('/getbookingsbyuserid', async (req, res) => {
   const userid = req.body.userid;
 
@@ -76,4 +76,31 @@ router.post('/getbookingsbyuserid', async (req, res) => {
     return res.status(400).json({ error });
   }
 });
+
+// Cancel room, update status 'booked' to 'cancelled', update currentBookings
+router.post('/cancelbooking', async (req, res) => {
+  const { bookingId, roomid } = req.body;
+
+  try {
+    // 1. bookings tables
+    const bookedRoom = await Booking.findOne({ _id: bookingId });
+    bookedRoom.status = 'cancelled';
+
+    await bookedRoom.save();
+
+    // 2. rooms table, delete the cancelled one from currentbookings array
+    const room = await Room.findOne({ _id: roomid });
+    const currentbookings = room.currentbookings;
+    const temp = currentbookings.filter((booking) => booking.bookingid.toString() !== bookingId);
+
+    // res.send(temp);
+    room.currentbookings = temp;
+    await room.save();
+
+    res.send('Your room booking is cancelled');
+  } catch (error) {
+    return res.send(400).json({ error });
+  }
+});
+
 module.exports = router;
