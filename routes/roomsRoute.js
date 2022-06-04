@@ -25,4 +25,15 @@ router.post('/getroombyid', async (req, res) => {
   }
 });
 
+// ADMIN SIDE
+// fetch all rooms
+router.get('/getallrooms', async (req, res) => {
+  try {
+    const rooms = await Room.find();
+    res.send(rooms);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
 module.exports = router;

@@ -37,4 +37,13 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// ADMIN SIDE
+router.get('/getallusers', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.send(users);
+  } catch (error) {
+    return res.sendStatus(400).json(error);
+  }
+});
 module.exports = router;
