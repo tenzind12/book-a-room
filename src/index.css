@@ -12,15 +12,31 @@ code {
 .navbar {
   background-color: black !important;
 }
+
 .navbar-brand {
   color: white !important;
 }
+
 .nav-link {
   color: white !important;
 }
 
 .navbar-nav {
   margin-left: auto !important;
+}
+
+#landing-page {
+  background-color: #2d3436;
+  background-image: linear-gradient(315deg, #212324 0%, #000000 74%);
+  height: calc(100vh - 57.5px);
+}
+
+#landing-page h2 {
+  font-size: 90px;
+}
+
+#landing-page .col-md-9 {
+  border-right: white 5px solid;
 }
 
 .smallimg {
