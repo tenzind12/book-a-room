@@ -1,36 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import Loader from '../../components/Loader';
+import sweetalert from 'sweetalert2';
+import axios from 'axios';
 
 function Addroom() {
+  const [loading, setLoading] = useState(false);
   // inputs states
   const [inputs, setInputs] = useState({
-    roomname: '',
+    name: '',
     rentperday: '',
     maxcount: '',
     description: '',
-    phone: '',
+    phonenumber: '',
     type: '',
   });
 
   // image url states
-  const [imageURLs, setImageURLs] = useState({
-    url1: '',
-    url2: '',
-    url3: '',
-  });
+  const [imageURLs, setImageURLs] = useState({ url1: '', url2: '', url3: '' });
 
   // add new room handler
-  const addRoomHandler = () => {
+  const addRoomHandler = async () => {
     const imagesArray = [imageURLs.url1, imageURLs.url2, imageURLs.url3];
-    const newRoom = { ...inputs, imageURLs: imagesArray };
-    console.log(newRoom);
+    const newRoom = { ...inputs, imageurls: imagesArray };
+    // console.log(newRoom);
+
+    try {
+      setLoading(true);
+      const result = (await axios.post('/api/rooms/addnewroom', newRoom)).data;
+      console.log(result);
+      setLoading(false);
+      sweetalert
+        .fire('Success !', 'New room has been added ', 'success')
+        .then((result) => (window.location.href = '/home'));
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      sweetalert.fire('Ooops !', 'Something went wrong !', 'error');
+    }
   };
 
   return (
     <div className="row m-0">
+      <h2 className="text-center mb-4">Add New Room</h2>
+      {loading && <Loader />}
       <div className="col-md-5">
         <input
-          value={inputs.roomname}
-          onChange={(e) => setInputs({ ...inputs, roomname: e.target.value })}
+          value={inputs.name}
+          onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
           type="text"
           placeholder="Room name"
           className="form-control"
@@ -57,8 +73,8 @@ function Addroom() {
           className="form-control"
         />
         <input
-          value={inputs.phone}
-          onChange={(e) => setInputs({ ...inputs, phone: e.target.value })}
+          value={inputs.phonenumber}
+          onChange={(e) => setInputs({ ...inputs, phonenumber: e.target.value })}
           type="text"
           placeholder="Phone number"
           className="form-control"
