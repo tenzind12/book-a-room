@@ -1,4 +1,5 @@
 const express = require('express');
+const { route } = require('express/lib/router');
 const router = express.Router();
 
 const Room = require('../models/room');
@@ -33,6 +34,17 @@ router.get('/getallrooms', async (req, res) => {
     res.send(rooms);
   } catch (error) {
     return res.status(400).json({ error });
+  }
+});
+
+// add new room
+router.post('/addnewroom', async (req, res) => {
+  try {
+    const newroom = new Room(req.body);
+    await newroom.save();
+    res.send('New Room saved');
+  } catch (error) {
+    return res.status(400).json('here= ' + error);
   }
 });
 
