@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Bookings from '../components/admin/Bookings';
 import Rooms from '../components/admin/Rooms';
 import Users from '../components/admin/Users';
 import { Tabs } from 'antd';
+import Addroom from '../components/admin/Addroom';
 
 function Adminscreen() {
   const { TabPane } = Tabs;
+
+  // if not admin, redirect to home
+  useEffect(() => {
+    if (!JSON.parse(localStorage.getItem('currentUser')).isAdmin) window.location.href = '/home';
+  }, []);
 
   return (
     <div className="mt-3 ms-3 shadow p-3">
@@ -18,7 +24,7 @@ function Adminscreen() {
           <Rooms />
         </TabPane>
         <TabPane tab="Add Room" key="3">
-          <h2>Add room</h2>
+          <Addroom />
         </TabPane>
         <TabPane tab="Users" key="4">
           <Users />
